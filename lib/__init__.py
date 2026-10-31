@@ -1,3 +1,5 @@
-from lib.mBot import mBot, mHID, mSerial
+from time import sleep
 
-__all__ = ["mBot", "mHID", "mSerial"]
+from lib.mBot import mBot, mbot, mHID, mLoopback, mSerial
+
+__all__ = ["mBot", "mHID", "mLoopback", "mSerial", "mbot", "sleep"]
