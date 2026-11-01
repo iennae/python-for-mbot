@@ -1,13 +1,21 @@
 import ast
+import runpy
+import time
 from pathlib import Path
 
 import pytest
 
 import lib
+import mbot
 from lib.mBot import mBot, mHID, mSerial
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-PYTHON_FILES = sorted(REPO_ROOT.glob("*.py")) + sorted((REPO_ROOT / "lib").glob("*.py"))
+PYTHON_FILES = (
+    sorted(REPO_ROOT.glob("*.py"))
+    + sorted((REPO_ROOT / "lib").glob("*.py"))
+    + sorted((REPO_ROOT / "mbot").glob("*.py"))
+    + sorted((REPO_ROOT / "missions").glob("*.py"))
+)
 
 
 @pytest.mark.parametrize("py_file", PYTHON_FILES, ids=lambda p: str(p.relative_to(REPO_ROOT)))
@@ -21,6 +29,21 @@ def test_python_files_parse_cleanly(py_file: Path) -> None:
 def test_public_exports() -> None:
     """Verify core classes can be imported without hardware attached."""
     assert hasattr(lib, "mBot")
+    assert hasattr(mbot, "mbot")
     assert mBot is not None
     assert mSerial is not None
     assert mHID is not None
+
+
+@pytest.mark.parametrize(
+    "mission_script",
+    sorted((REPO_ROOT / "missions").glob("mission_*.py")),
+    ids=lambda p: p.name,
+)
+def test_missions_execute_in_simulation_mode(
+    mission_script: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Verify every Cadet Engineer mission script executes cleanly with MBOT_SIMULATE=1."""
+    monkeypatch.setenv("MBOT_SIMULATE", "1")
+    monkeypatch.setattr(time, "sleep", lambda _sec: None)
+    runpy.run_path(str(mission_script), run_name="__main__")
