@@ -5,8 +5,7 @@ from lib.mBot import *
 if __name__ == "__main__":
     freeze_support()
     bot = mBot()
-    # bot.startWithSerial("/dev/ttyUSB0")
-    bot.startWithHID()
+    bot.startWithSerial()
     tones = {
         "C3": 131,
         "D3": 147,

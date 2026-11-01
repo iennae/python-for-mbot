@@ -1,6 +1,8 @@
 from lib.mBot import *
 
 if __name__ == "__main__":
+    bot = mBot()
+    bot.startWithSerial()
 
     def onDistance(dist):
         print("distance:", dist)
@@ -11,9 +13,10 @@ if __name__ == "__main__":
             sleep(0.1)
         bot.doMove(100, 100)
 
-    bot = mBot()
-    # bot.startWithSerial("/dev/ttyUSB0")
-    bot.startWithHID()
-    while 1:
-        bot.requestUltrasonicSensor(1, 3, onDistance)
-        sleep(0.2)
+    try:
+        while True:
+            bot.requestUltrasonicSensor(1, 3, onDistance)
+            sleep(0.2)
+    except KeyboardInterrupt:
+        bot.doMove(0, 0)
+        bot.close()

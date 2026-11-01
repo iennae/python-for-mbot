@@ -1,95 +1,128 @@
-# Python Library for mBot
-Table of contents
-=================
+# Python for mBot (Original mBot / mCore Edition)
 
-  * [Description](#description)
-  * [Software Dependencies](#software-dependencies)
-  * [Installation](#installation)
-  * [Usage](#usage)
+A modernized Python 3.11+ interface and **Cadet Engineer Mission Curriculum** for controlling the **Original Makeblock mBot v1 (mCore / ATmega328P)** over USB Serial, Bluetooth Serial, or 2.4G Wireless HID.
 
-Description
------------
-A Python interface to control and communicate with mBot robot kit from Makeblock
+---
 
-This has been tested with:
+## Table of Contents
+* [Hardware & Firmware Preparation](#hardware--firmware-preparation)
+* [Installation](#installation)
+* [Quick Start: Cadet Engineer API (`from mbot import *`)](#quick-start-cadet-engineer-api-from-mbot-import-)
+* [Cadet Engineer Missions (`missions/`)](#cadet-engineer-missions-missions)
+* [Classic Callback API (`from lib.mBot import *`)](#classic-callback-api-from-libmbot-import-)
+* [Simulation Mode (No Hardware Required)](#simulation-mode-no-hardware-required)
 
-* the Raspberry PI.
-* the Intel Edison.
+---
 
-It works on Linux, Windows 7/10 and OS X.
+## Hardware & Firmware Preparation
 
-Software Dependencies
----------------------
+Before running Python scripts from your computer, your **Original mBot (`mCore`)** needs the Makeblock Online Serial Firmware installed:
 
-* Makeblock Library (https://github.com/Makeblock-official/Makeblock-Libraries)
-* Python (http://python.org/download/)
-* Cython (http://cython.org/#download)
-* cython-hidapi (https://github.com/trezor/cython-hidapi)
-* pyserial
+1. Clone or install the companion Arduino library from [`iennae/Makeblock-Libraries`](https://github.com/iennae/Makeblock-Libraries) into your `Arduino/libraries/` directory.
+2. Open the **Arduino IDE** and select:
+   * **Board**: `Tools -> Board -> Arduino AVR Boards -> Arduino Uno`
+   * **Port**: Your mBot's USB serial port (e.g., `/dev/ttyUSB0`, `/dev/cu.usbserial-*`, or `COM3`)
+3. Open `File -> Examples -> MakeBlock Drive Updated -> Firmware_For_mBlock -> mbot_firmware`.
+4. Click **Upload** to flash the online firmware to your mBot.
 
-Prepare for Makeblock's Bots
-----------------------------
-1. Download the source from the git https://github.com/Makeblock-official/Makeblock-Libraries
+---
 
-2. copy the makeblock folder to your arduino default library. Your Arduino library folder should now look like this
-(on Windows): [arduino installation directory]\libraries\makeblock\src
-(on MACOS): [arduino Package Contents]\contents\Java\libraries\makeblock\src
+## Installation
 
-3. Open the Arduino Application. (If it's already open, you will need to restart it to see changes.)
+Create and activate a Python 3.11+ virtual environment, then install the package:
 
-4. Click "File-> Examples". Here are firmwares for Makeblock's bots in "MakeBlockDrive->Firmware_for_mBlock".
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
 
-5. Upload the Firmware to your bot.
-
-Installation
--------
-
-install python 2.7.x / 3.x ( http://python.org/downloads )
-
+* For development (linting with `ruff` and testing with `pytest`):
+  ```bash
+  pip install -e ".[dev]"
   ```
-  [sudo] pip install cython
-  [sudo] pip install pyserial
-  [sudo] pip install hidapi
+* For optional 2.4G wireless USB dongle support (`hidapi`):
+  ```bash
+  pip install -e ".[hid]"
   ```
-Usage
------------------
- ```
-  git clone https://github.com/xeecos/python-for-mbot
- ```
- Enter the folder "python-for-mbot"
- 
- Edit lightsensor.py
- ```python
+
+---
+
+## Quick Start: Cadet Engineer API (`from mbot import *`)
+
+The `mbot` module automatically scans your USB serial ports to connect to the rover (or you can pass `mbot(port="/dev/ttyUSB0")` or set the `MBOT_PORT` environment variable):
+
+```python
+import time
+from mbot import *
+
+rover = mbot()
+
+# Pulse both onboard RGB LEDs Emerald Green (port=0, slot=0, R, G, B)
+rover.rgb_led(0, 0, 0, 255, 0)
+time.sleep(1.0)
+
+# Play a 440 Hz tone for 300 ms
+rover.buzzer(440, 300)
+time.sleep(0.5)
+
+# Read sensors synchronously
+print("Light sensor:", rover.get_light())
+print("Ultrasonic distance (cm):", rover.get_distance(port=3))
+
+# Drive forward and stop
+rover.move(100, 100)
+time.sleep(1.0)
+rover.stop()
+
+# Turn off LEDs
+rover.rgb_led(0, 0, 0, 0, 0)
+```
+
+---
+
+## Cadet Engineer Missions (`missions/`)
+
+Explore the guided mission briefings in [`missions/README.md`](missions/README.md):
+
+1. [`missions/mission_01_ignition.py`](missions/mission_01_ignition.py) — **Ignition & Telemetry Handshake** (RGB LEDs & Audio Transponder)
+2. [`missions/mission_01_sos_challenge.py`](missions/mission_01_sos_challenge.py) — **Field Challenge: S.O.S. Optical & Audio Morse Beacon**
+3. [`missions/mission_02_thrusters.py`](missions/mission_02_thrusters.py) — **Drive Thruster Calibration** (Forward, Reverse, Pivot & Stop)
+4. [`missions/mission_03_solar_beacon.py`](missions/mission_03_solar_beacon.py) — **Solar Array & Night-Vision Beacon** (Onboard Light Sensor)
+5. [`missions/mission_04_radar_sweep.py`](missions/mission_04_radar_sweep.py) — **Ultrasonic Radar & Crater Avoidance** (Ultrasonic Rangefinder)
+6. [`missions/mission_05_canyon_patrol.py`](missions/mission_05_canyon_patrol.py) — **Canyon Floor Line Navigation** (Dual IR Line Follower)
+
+---
+
+## Classic Callback API (`from lib.mBot import *`)
+
+All classic scripts remain supported and now auto-detect USB serial ports when `bot.startWithSerial()` is called without arguments:
+
+```python
 from lib.mBot import *
 
-def onLight(value):
-	 print("light = ",value)
 
-if __name__ == '__main__':
-	 bot = mBot()
-	 bot.startWithSerial("COM15") or bot.startWithHID()
-	 while(1):
-	   bot.requestLightOnBoard(1,onLight)
-	   sleep(0.5)
- ```
-  
-  ## using usb serial or bluetooth serial:
-  
-  change the serial port name "COMX or /dev/tty.XXX" for your mBot on system
-  ```
-  bot.startWithSerial("COM15")
-  ```
-  
-  using wireless HID:
-  
-  ```
-  bot.startWithHID()
-  ```
-  
-  running:
-  
-  ```
-  [sudo] python lightsensor.py
-  ```
-  
-### Learn more from Makeblock official website http://www.makeblock.com
+def onLight(value):
+    print("light = ", value)
+
+
+if __name__ == "__main__":
+    bot = mBot()
+    bot.startWithSerial()  # Auto-detects USB serial port (or pass e.g. "/dev/ttyUSB0")
+    try:
+        while True:
+            bot.requestLightOnBoard(1, onLight)
+            sleep(0.5)
+    except KeyboardInterrupt:
+        bot.close()
+```
+
+---
+
+## Simulation Mode (No Hardware Required)
+
+To test any script or mission without a physical mBot plugged in, set `MBOT_SIMULATE=1`:
+
+```bash
+MBOT_SIMULATE=1 python missions/mission_01_ignition.py
+```

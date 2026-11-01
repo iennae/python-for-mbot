@@ -7,8 +7,10 @@ def onLineFollower(value):
 
 if __name__ == "__main__":
     bot = mBot()
-    # bot.startWithSerial("COM15")
-    bot.startWithHID()
-    while 1:
-        bot.requestLineFollower(1, 2, onLineFollower)
-        sleep(0.5)
+    bot.startWithSerial()
+    try:
+        while True:
+            bot.requestLineFollower(1, 2, onLineFollower)
+            sleep(0.5)
+    except KeyboardInterrupt:
+        bot.close()

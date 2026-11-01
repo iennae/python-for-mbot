@@ -7,8 +7,10 @@ def onLight(value):
 
 if __name__ == "__main__":
     bot = mBot()
-    # bot.startWithSerial("COM15")
-    bot.startWithHID()
-    while 1:
-        bot.requestLightOnBoard(1, onLight)
-        sleep(0.5)
+    bot.startWithSerial()
+    try:
+        while True:
+            bot.requestLightOnBoard(1, onLight)
+            sleep(0.5)
+    except KeyboardInterrupt:
+        bot.close()
