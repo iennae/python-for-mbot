@@ -11,10 +11,11 @@ from lib.mBot import mBot, mHID, mSerial
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 PYTHON_FILES = (
-    sorted(REPO_ROOT.glob("*.py"))
-    + sorted((REPO_ROOT / "lib").glob("*.py"))
-    + sorted((REPO_ROOT / "mbot").glob("*.py"))
+    sorted((REPO_ROOT / "src" / "mbot").glob("*.py"))
+    + sorted((REPO_ROOT / "src" / "lib").glob("*.py"))
+    + sorted((REPO_ROOT / "examples").glob("*.py"))
     + sorted((REPO_ROOT / "missions").glob("*.py"))
+    + sorted((REPO_ROOT / "tests").glob("*.py"))
 )
 
 
@@ -27,7 +28,7 @@ def test_python_files_parse_cleanly(py_file: Path) -> None:
 
 
 def test_public_exports() -> None:
-    """Verify core classes can be imported without hardware attached."""
+    """Verify core classes can be imported via both `mbot` and legacy `lib.mBot`."""
     assert hasattr(lib, "mBot")
     assert hasattr(mbot, "mbot")
     assert mBot is not None

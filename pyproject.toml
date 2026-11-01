@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "python-for-mbot"
 version = "0.2.0"
-description = "Python interface to control and communicate with the original Makeblock mBot (mCore)"
+description = "Python interface and mission curriculum for the original Makeblock mBot (mCore)"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
@@ -23,28 +23,21 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
 include = ["mbot*", "lib*"]
 
 [tool.ruff]
 target-version = "py310"
 line-length = 100
-include = ["*.py", "lib/*.py", "mbot/*.py", "missions/*.py", "tests/*.py"]
+include = ["src/**/*.py", "examples/*.py", "missions/*.py", "scripts/*.py", "tests/*.py"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP"]
 
 [tool.ruff.lint.per-file-ignores]
-"distanceTest.py" = ["F403", "F405"]
-"hid_demo.py" = ["F403", "F405"]
-"lightsenser.py" = ["F403", "F405"]
-"lightsensor.py" = ["F403", "F405"]
-"linefollowTest.py" = ["F403", "F405"]
+"examples/*.py" = ["F403", "F405"]
 "missions/*.py" = ["F403", "F405"]
-"motorTest.py" = ["F403", "F405"]
-"musicTest.py" = ["F403", "F405"]
-"rgbled.py" = ["F403", "F405"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
+pythonpath = ["src"]
