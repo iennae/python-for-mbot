@@ -2,27 +2,31 @@ import time
 
 from mbot import *
 
-print("[UPLINK] Initiating Solar Array & Night-Vision Diagnostic...")
+print("[UPLINK] Initiating Solar Array & Dusk Protocol...")
 rover = mbot()
 print("[STATUS] Telemetry Link: SECURE 🟢")
 
 NIGHT_THRESHOLD = 300.0
 
 try:
-    for sample in range(10):
-        lux = rover.get_light()
-        print(f"[TELEMETRY #{sample + 1:02d}] Ambient Solar Flux: {lux:.1f}")
+    # --- PHASE 1: Single Solar Flux Reading ---
+    lux = rover.get_light()
+    print(f"[TELEMETRY] Initial Ambient Solar Flux: {lux:.1f}")
 
-        if lux < NIGHT_THRESHOLD:
-            print("  -> [ALERT] Low light detected! Activating high-beam LEDs.")
-            rover.rgb_led(0, 0, 255, 255, 255)
-        else:
-            print("  -> [NOMINAL] Daylight nominal. Running low-power indicator.")
-            rover.rgb_led(0, 0, 0, 60, 0)
+    # --- PHASE 2: Field Challenge (TODO: Automatic Dusk Headlights Loop) ---
+    # Poll the onboard light sensor in a loop (e.g., `for sample in range(10):`):
+    #   1. Read `lux = rover.get_light()` and print the reading.
+    #   2. If `lux < NIGHT_THRESHOLD`:
+    #        - Activate high-beam white headlights: rover.rgb_led(0, 0, 255, 255, 255)
+    #        - Optional: chirp a brief alert tone with rover.buzzer(660, 100)
+    #   3. Else:
+    #        - Keep the low-power green status beacon on: rover.rgb_led(0, 0, 0, 60, 0)
+    #   4. Pause `time.sleep(0.5)` between samples.
+    #
+    # TODO: Write your solar monitoring loop below!
 
-        time.sleep(0.5)
-
-    print("[STATUS] Solar sweep complete. Entering dark standby...")
+    # --- PHASE 3: Standby Mode ---
+    print("[STATUS] Solar check complete. Entering dark standby...")
     rover.rgb_led(0, 0, 0, 0, 0)
 
 except KeyboardInterrupt:

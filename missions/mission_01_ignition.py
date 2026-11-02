@@ -19,7 +19,16 @@ try:
     rover.buzzer(440, 300)
     time.sleep(0.5)
 
-    # --- PHASE 3: Standby Mode ---
+    # --- PHASE 3: Field Challenge (TODO: Transmit S.O.S. in Morse Code) ---
+    # S.O.S. consists of:
+    #   S = 3 short pulses (e.g., 0.2 seconds on, 0.2 seconds off)
+    #   O = 3 long pulses  (e.g., 0.6 seconds on, 0.2 seconds off)
+    #   S = 3 short pulses (e.g., 0.2 seconds on, 0.2 seconds off)
+    #
+    # TODO: Use rover.rgb_led(...), rover.buzzer(...), and time.sleep(...)
+    #       (or a `for _ in range(3):` loop!) to broadcast S.O.S. before standby.
+
+    # --- PHASE 4: Standby Mode ---
     print("[STATUS] Diagnostic complete. Entering dark standby...")
     rover.rgb_led(0, 0, 0, 0, 0)  # Extinguish LEDs
 
