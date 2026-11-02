@@ -1,28 +1,29 @@
-# Python for mBot (`iennae` Original mBot / mCore Fork)
+# Python for mBot (`iennae` Original mBot Fork)
 
-A modernized Python 3.10+ interface and **Ares VII Rover Mission Curriculum** for controlling the **Original Makeblock mBot (`mCore` / `ATmega328P`)** over USB Serial, Bluetooth Serial, or 2.4G Wireless HID.
-
----
-
-## About This Fork (`iennae/python-for-mbot`)
-
-This repository is a modernized fork of [`xeecos/python-for-mbot`](https://github.com/xeecos/python-for-mbot), updated for Python 3.10–3.13 and paired with **[`iennae/Makeblock-Libraries`](https://github.com/iennae/Makeblock-Libraries)**.
-
-While newer kits like the mBot2 support Python natively at a significantly higher price point, the **original Makeblock mBot (`mCore`)** is a widely available, affordable platform. Once a builder has assembled the original mBot and explored its pre-built remote-control modes and block-based programming, this project provides a direct bridge into introductory Python programming using the hardware they already own.
-
-### What Was Modernized in This Fork
-- **Standard `src/` Package Layout**: Organized into `src/mbot/` (with a backward-compatible `src/lib/` shim so legacy `from lib.mBot import *` scripts continue to work), `missions/`, `examples/`, and `tests/`.
-- **Python 3 Binary Protocol & Auto-Discovery**: Fixed Python 3 `bytes`/`struct` packing and unpacking against `mbot_firmware.ino`, added automatic USB serial port detection (`CH340` / `FTDI` / `CP210x`), and added a hardware-free simulation mode (`MBOT_SIMULATE=1`).
-- **Streamlined Dependencies**: Uses `pyserial` as the sole required dependency (`cython` is no longer needed, and `hidapi` is an optional `[hid]` extra for legacy 2.4G wireless USB dongles).
-- **Ares VII Rover Mission Curriculum (`missions/` & `site/`)**: Guided starter templates, mission briefings, and an offline-compatible static website.
+A Python 3.10+ interface and **Ares VII Rover Mission Curriculum** for controlling the **Original Makeblock mBot (`mCore` / `ATmega328P`)** over USB Serial, Bluetooth Serial, or 2.4G Wireless HID.
 
 ---
 
-## ⚠️ Use at Your Own Risk & Safety Disclaimer
+## What This Project Is & What This Fork Does Differently
+
+This repository is a modernized fork of [`xeecos/python-for-mbot`](https://github.com/xeecos/python-for-mbot), updated for modern Python 3 and paired with **[`iennae/Makeblock-Libraries`](https://github.com/iennae/Makeblock-Libraries)**.
+
+While newer kits like the mBot2 support Python natively at a significantly higher price point, the **original Makeblock mBot (`mCore`)** is a widely available, affordable platform. Once a builder has assembled the original mBot and explored its pre-built remote-control modes and block-based programming, this project provides a direct bridge into introductory Python programming using the hardware they already own:
+
+- Adds a beginner-friendly synchronous API (`from mbot import *`, `rover = mbot()`) alongside automatic USB serial port discovery.
+- Provides a guided **Ares VII Rover** mission curriculum (`missions/`) with starter templates (`# TODO` challenges) and an offline-ready **Mission Control** website (`site/index.html`).
+- Removes legacy build requirements (`cython` is no longer needed; `pyserial` is the only default dependency).
+
+For release notes and technical changes, see **[`CHANGELOG.md`](CHANGELOG.md)**. For original upstream context and classic callback API details, see **[`ATTRIBUTION.md`](ATTRIBUTION.md)**.
+
+---
+
+## ⚠️ Use at Your Own Risk & Scope Disclaimer
 
 > **IMPORTANT — USE AT YOUR OWN RISK:**
 > This software and documentation are provided **"AS IS"**, without warranty of any kind, express or implied. By downloading, installing, or running these scripts with physical hardware, you assume all risks associated with their operation.
 >
+> - **Hardware Scope**: This fork is focused on and tested exclusively with the **original Makeblock mBot (`mCore` / `ATmega328P`)**. Other Makeblock robots or mainboards are not tested in this fork.
 > - **Moving Parts & Pinch Hazards**: Keep fingers, hair, loose clothing, and USB cables clear of spinning wheels, gears, and motors.
 > - **Drop & Collision Hazards**: Motor commands execute immediately over serial and can drive the robot off desks or tables. Prop the mBot's wheels off the surface on a small block ("test stand") when testing new motor scripts, or operate on the floor.
 > - **Power & Battery Safety**: Onboard LEDs, the buzzer, and sensors can run off USB 5V power alone, but **the drive motors (`M1`/`M2`) require the battery pack connected with the chassis power switch toggled `ON`**. Turn the chassis switch `OFF` when not in use.
@@ -62,7 +63,7 @@ Before running Python scripts, flash the **Online Serial Firmware (`mbot_firmwar
 
 ## Step 2: Prime Mission Control (Thonny or Python Virtual Environment)
 
-Clone or download this repository (`iennae/python-for-mbot`), not the original upstream repo:
+Clone or download this repository (`iennae/python-for-mbot`):
 
 ```bash
 git clone https://github.com/iennae/python-for-mbot.git
@@ -71,9 +72,8 @@ cd python-for-mbot
 
 ### Option A: Using Thonny (Recommended Beginner Editor)
 1. Download and open **[Thonny](https://thonny.org/)** (which includes Python 3 built in).
-2. Install the serial communication library using either method:
-   * **Point-and-Click in Thonny**: Click **`Tools -> Manage packages...`**, search for **`pyserial`**, and click **Install**.
-   * **Or via Thonny's Shell**: Click **`Tools -> Open system shell...`** and run `pip install -e .` inside the `python-for-mbot` folder.
+2. Install the package in Thonny:
+   * Click **`Tools -> Open system shell...`** and run `pip install -e .` inside the `python-for-mbot` folder *(or click **`Tools -> Manage packages...`**, search for **`pyserial`**, and click **Install**)*.
 3. Click **`File -> Open...`**, select [`missions/mission_01_ignition.py`](missions/mission_01_ignition.py), and click the green **▶ Run (`F5`)** button!
 
 ### Option B: Using Terminal / VS Code (`venv`)
@@ -89,13 +89,15 @@ pip install -e .
 
 ## Step 3: Launch the Ares VII Rover Missions (`missions/` & `site/`)
 
-* **Offline Mission Control Website**: Double-click `site/index.html` in your file manager (`Finder` / `File Explorer`) to open the interactive **Ares VII Rover — Mission Control** guide directly in your browser (works 100% offline via `file://` with no web server required).
+* **Offline Mission Control Website**: Double-click [`site/index.html`](site/index.html) in your file manager (`Finder` / `File Explorer`) to open the interactive **Ares VII Rover — Mission Control** guide directly in your browser (works 100% offline via `file://` with no web server required), or view the deployed GitHub Pages site.
 * **Starter Mission Scripts (`missions/`)**:
-  * [`missions/mission_01_ignition.py`](missions/mission_01_ignition.py) — **Ignition & Telemetry Handshake** (RGB LEDs & Audio Transponder)
-  * [`missions/mission_02_thrusters.py`](missions/mission_02_thrusters.py) — **Drive Thruster Calibration** (Forward, Reverse, Pivot & Stop)
-  * [`missions/mission_03_solar_beacon.py`](missions/mission_03_solar_beacon.py) — **Solar Array & Dusk Protocol** (Onboard Light Sensor)
-  * [`missions/mission_04_radar_sweep.py`](missions/mission_04_radar_sweep.py) — **Ultrasonic Radar & Boulder Evasion** (Ultrasonic Rangefinder)
-  * [`missions/mission_05_canyon_patrol.py`](missions/mission_05_canyon_patrol.py) — **Canyon Conduit Navigation** (Dual IR Line Follower)
+  * [`missions/00_launchpad_readiness.md`](missions/00_launchpad_readiness.md) — **Mission 00: Launchpad Readiness** (Wiring check, Arduino IDE firmware upload, and Thonny setup)
+  * [`missions/mission_01_ignition.py`](missions/mission_01_ignition.py) — **Mission 01: Ignition & Telemetry Handshake** (RGB LEDs, Buzzer & S.O.S. Challenge)
+  * [`missions/mission_02_thrusters.py`](missions/mission_02_thrusters.py) — **Mission 02: Drive Thruster Calibration** (Forward, Reverse, Pivot & Stop)
+  * [`missions/mission_03_solar_beacon.py`](missions/mission_03_solar_beacon.py) — **Mission 03: Solar Array & Dusk Protocol** (Onboard Light Sensor)
+  * [`missions/mission_04_radar_sweep.py`](missions/mission_04_radar_sweep.py) — **Mission 04: Ultrasonic Radar & Boulder Evasion** (Ultrasonic Rangefinder)
+  * [`missions/mission_05_canyon_patrol.py`](missions/mission_05_canyon_patrol.py) — **Mission 05: Canyon Conduit Navigation** (Dual IR Line Follower)
+* **Adding New Missions**: Copy [`missions/TEMPLATE.md`](missions/TEMPLATE.md) and [`missions/template_mission.py`](missions/template_mission.py), then run `python scripts/build_site.py` to update `site/missions_data.js`.
 * **Dry-Run Simulation Mode (No Hardware Required)**:
   ```bash
   MBOT_SIMULATE=1 python missions/mission_01_ignition.py
@@ -109,51 +111,14 @@ pip install -e .
 python-for-mbot/
 ├── pyproject.toml          # Modern PEP 621 package configuration
 ├── requirements.txt        # Runtime dependency (pyserial>=3.5)
+├── CHANGELOG.md            # Release notes and modernization changelog
+├── ATTRIBUTION.md          # Original project context and classic callback API
 ├── src/
 │   ├── mbot/               # Core mbot package (`from mbot import *`)
 │   └── lib/                # Backward-compatible shim (`from lib.mBot import *`)
 ├── missions/               # Ares VII Rover starter templates & mission briefings
+├── scripts/                # Zero-dependency static site generator (`build_site.py`)
 ├── site/                   # Offline-ready static website (also deployed to GitHub Pages)
 ├── examples/               # Classic callback-based example scripts
-└── tests/                  # Pytest protocol, simulation, and smoke tests
-```
-
----
-
-## Original Project Context & Attribution
-
-> *The section below is preserved from the original [`xeecos/python-for-mbot`](https://github.com/xeecos/python-for-mbot) repository to retain historical context and attribution.*
-
-### Original Description
-A Python interface to control and communicate with mBot robot kit from Makeblock.
-
-This has been tested with:
-* the Raspberry PI.
-* the Intel Edison.
-
-It works on Linux, Windows 7/10 and OS X.
-
-### Classic Callback API Usage (`examples/`)
-```python
-from lib.mBot import *
-
-
-def onLight(value):
-    print("light = ", value)
-
-
-if __name__ == "__main__":
-    bot = mBot()
-    bot.startWithSerial()  # Auto-detects USB serial port (or pass e.g. "COM15" / "/dev/ttyUSB0")
-    try:
-        while True:
-            bot.requestLightOnBoard(1, onLight)
-            sleep(0.5)
-    except KeyboardInterrupt:
-        bot.close()
-```
-
-Using wireless HID (requires `pip install -e ".[hid]"`):
-```python
-bot.startWithHID()
+└── tests/                  # Pytest protocol, simulation, site build, and smoke tests
 ```
