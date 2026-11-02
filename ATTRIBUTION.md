@@ -6,6 +6,12 @@ The notes below are preserved from the original upstream repository to retain hi
 
 ---
 
+## Fork Additions (`iennae/python-for-mbot`)
+
+Newly created files in this fork (including the `missions/` curriculum and starter templates, `site/` Mission Control web application, `scripts/build_site.py`, `tests/`, and `.github/workflows/`) are **Copyright 2026 Jennifer Davis** and licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0). Original upstream files originating from [`xeecos/python-for-mbot`](https://github.com/xeecos/python-for-mbot) retain their upstream license ([`LICENSE`](LICENSE)).
+
+---
+
 ## Original Upstream Description (`xeecos/python-for-mbot`)
 
 A Python interface to control and communicate with mBot robot kit from Makeblock.
