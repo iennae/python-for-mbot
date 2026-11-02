@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ares VII Rover — Python Mission Control (Original mBot / mCore)</title>
+  <meta name="description" content="Interactive offline-ready Python mission briefings, starter templates, and hardware setup guide for the original Makeblock mBot (mCore).">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">M7</div>
+      <div class="brand-text">
+        <h1>Ares VII Rover — Python Mission Control</h1>
+        <p>Original Makeblock mBot (mCore / ATmega328P) Field Manual &amp; Starter Curriculum</p>
+      </div>
+    </div>
+    <div class="topbar-meta">
+      <div id="overall-progress-badge" class="overall-progress">Telemetry Checkpoints: 0 / 0 Verified</div>
+      <button type="button" id="open-add-mission-modal-btn" class="btn-secondary">+ How to Add a Mission</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="sidebar" aria-label="Mission Roster">
+      <div class="sidebar-heading">Mission Roster</div>
+      <ul id="mission-nav-list" class="mission-list"></ul>
+      <div class="sidebar-footer">
+        <strong>100% Offline Ready:</strong> Open <code>site/index.html</code> directly in any browser while coding in <a href="https://thonny.org/" target="_blank" rel="noopener noreferrer">Thonny</a>.
+      </div>
+    </aside>
+
+    <div class="mission-stage">
+      <div id="mission-stage-container"></div>
+
+      <footer class="disclaimer-card" role="contentinfo">
+        <strong>⚠️ Use at Your Own Risk &amp; Hardware Safety Disclaimer:</strong>
+        This software, firmware, and curriculum are provided "AS IS" without warranty of any kind.
+        Keep fingers, hair, and cables clear of spinning wheels. Prop the rover on a small desktop block
+        ("Rover Test Stand") when testing new motor scripts so it does not drive off table edges.
+        Remember that drive motors (<code>M1</code>/<code>M2</code>) require battery power with the chassis switch toggled <code>ON</code>.
+      </footer>
+    </div>
+  </main>
+
+  <div id="add-mission-modal" class="modal-backdrop" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title" class="section-title" style="margin:0;">➕ How to Add a New Mission</h2>
+        <button type="button" id="close-add-mission-modal-btn" class="btn-secondary">Close</button>
+      </div>
+      <div class="modal-body">
+        <p>Adding a new mission to this website requires <strong>zero HTML or JavaScript editing</strong>:</p>
+        <p>1. Copy <code>missions/template_mission.py</code> to <code>missions/mission_06_your_topic.py</code> and customize the baseline diagnostic and <code># TODO</code> Field Challenge.</p>
+        <p>2. Copy <code>missions/TEMPLATE.md</code> to <code>missions/06_your_topic.md</code> and fill in the Story Briefing, Objectives, Systems Check, Hints, Success Metrics, and Debrief table.</p>
+        <p>3. Run <code>python scripts/build_site.py</code> (or open <code>scripts/build_site.py</code> in Thonny and press <strong>▶ Run</strong>) to regenerate <code>site/missions_data.js</code>, then refresh this page!</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="missions_data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

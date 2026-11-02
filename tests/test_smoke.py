@@ -15,6 +15,7 @@ PYTHON_FILES = (
     + sorted((REPO_ROOT / "src" / "lib").glob("*.py"))
     + sorted((REPO_ROOT / "examples").glob("*.py"))
     + sorted((REPO_ROOT / "missions").glob("*.py"))
+    + sorted((REPO_ROOT / "scripts").glob("*.py"))
     + sorted((REPO_ROOT / "tests").glob("*.py"))
 )
 
