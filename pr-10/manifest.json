@@ -1,0 +1,14 @@
+[
+  {
+    "filename": "01-mission-00-launchpad.png",
+    "title": "Mission 00: Launchpad Readiness (Default Landing View)"
+  },
+  {
+    "filename": "02-mission-01-ignition.png",
+    "title": "Mission 01: Ignition & Telemetry (Starter Template & Hints)"
+  },
+  {
+    "filename": "03-add-mission-modal.png",
+    "title": "How to Add a New Mission Modal"
+  }
+]
