@@ -18,7 +18,7 @@ The exit ramp out of the Ares VII landing crater is littered with boulders! Use 
 - **Rover Test Stand**: Test first on your desktop stand using your hand as a movable "boulder" in front of the ultrasonic eyes!
 
 ## Field Challenge
-Open `missions/mission_04_radar_sweep.py` and run Phase 1 to confirm the ultrasonic sensor reports distance in centimeters. Then complete **Phase 2 (`# TODO`)**:
+Open `missions/mission_04_radar_sweep.py` and run the baseline rangefinder ping to confirm the ultrasonic sensor reports distance in centimeters. Then complete the **Field Challenge (`# TODO`)** section:
 1. Poll `distance_cm = rover.get_distance(port=3)` in a loop.
 2. Use `if / elif / else` to implement the 3 proximity zones:
    - **Danger (`0 < distance_cm < SAFE_DISTANCE_CM`)**: LEDs Red (`255, 0, 0`), beep `rover.buzzer(880, 150)`, reverse `rover.move(-100, -100)` for `0.4`s, pivot `rover.move(100, -100)` for `0.3`s, then `rover.stop()`.

@@ -18,7 +18,7 @@ You have cleared the boulder field and reached the Ares VII thermal conduit—a 
 - **Battery Power**: Battery pack connected and chassis switch **`ON`**.
 
 ## Field Challenge
-Open `missions/mission_05_canyon_patrol.py` and test Phase 1 by placing the rover over the dark line, slightly left, slightly right, and off the line to see all 4 states (`0`, `1`, `2`, `3`). Then complete **Phase 2 (`# TODO`)**:
+Open `missions/mission_05_canyon_patrol.py` and test the baseline readout by placing the rover over the dark line, slightly left, slightly right, and off the line to see all 4 states (`0`, `1`, `2`, `3`). Then complete the **Field Challenge (`# TODO`)** section:
 - **`state == 0` (Both sensors on dark line)**: Both LEDs Green, drive straight `rover.move(100, 100)`.
 - **`state == 1` (Left on line, Right off line — drifting right)**: Left LED Green (`slot=1`), Right LED off (`slot=2`), steer left `rover.move(40, 110)`.
 - **`state == 2` (Left off line, Right on line — drifting left)**: Left LED off (`slot=1`), Right LED Green (`slot=2`), steer right `rover.move(110, 40)`.
@@ -30,7 +30,7 @@ Open `missions/mission_05_canyon_patrol.py` and test Phase 1 by placing the rove
 - **Hint 3 — Faster Polling**: Keep `time.sleep(0.15)` or `0.2` short so the rover checks the line 5–6 times per second!
 
 ## Mission Success Metrics
-- Phase 1 prints `0` when both IR sensors sit over the black line and `3` when both sit over white background.
+- Initial sensor readout prints `0` when both IR sensors sit over the black line and `3` when both sit over white background.
 - Rover drives straight ahead with both LEDs green when centered (`State 0`).
 - Rover smoothly steers left (`State 1`) or right (`State 2`) when approaching a curve, lighting the matching side LED.
 - Rover reverses slowly (`State 3`) if pushed completely off the track and halts cleanly when the patrol loop ends.

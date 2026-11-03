@@ -21,19 +21,19 @@ rover = mbot()
 print("[STATUS] Telemetry Link: SECURE 🟢")
 
 try:
-    # --- PHASE 1: Optical Beacon Diagnostic ---
+    # --- Optical Beacon Diagnostic ---
     print("[DIAGNOSTIC] Pulsing optical sensors (Emerald Green)...")
     # Syntax: rgb_led(port, slot, Red, Green, Blue) -> values 0 to 255
     rover.rgb_led(0, 0, 0, 255, 0)
     time.sleep(1.5)  # Hold signal for 1.5 seconds
 
-    # --- PHASE 2: Audio Transponder Check ---
+    # --- Audio Transponder Check ---
     print("[DIAGNOSTIC] Transmitting 440Hz standard beacon...")
     # Syntax: buzzer(frequency_hz, duration_ms)
     rover.buzzer(440, 300)
     time.sleep(0.5)
 
-    # --- PHASE 3: Field Challenge (TODO: Transmit S.O.S. in Morse Code) ---
+    # --- Field Challenge (TODO: Transmit S.O.S. in Morse Code) ---
     # S.O.S. consists of:
     #   S = 3 short pulses (e.g., 0.2 seconds on, 0.2 seconds off)
     #   O = 3 long pulses  (e.g., 0.6 seconds on, 0.2 seconds off)
@@ -42,7 +42,7 @@ try:
     # TODO: Use rover.rgb_led(...), rover.buzzer(...), and time.sleep(...)
     #       (or a `for _ in range(3):` loop!) to broadcast S.O.S. before standby.
 
-    # --- PHASE 4: Standby Mode ---
+    # --- Standby Mode ---
     print("[STATUS] Diagnostic complete. Entering dark standby...")
     rover.rgb_led(0, 0, 0, 0, 0)  # Extinguish LEDs
 

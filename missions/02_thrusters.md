@@ -19,7 +19,7 @@ Heartbeat confirmed, Cadet! Before driving off the landing pad into the Ares VII
 - **Motor Cables**: Left motor connected to `M1`, Right motor connected to `M2`.
 
 ## Field Challenge
-Open `missions/mission_02_thrusters.py` and run Phase 1 with the wheels propped on your test stand. Then complete **Phase 2 (`# TODO`)**:
+Open `missions/mission_02_thrusters.py` and run the forward thruster check with the wheels propped on your test stand. Then complete the **Field Challenge (`# TODO`)** section:
 1. Add a 1.0-second reverse burn (`rover.move(-120, -120)`) with amber LEDs (`255, 140, 0`).
 2. Add a starboard pivot turn (`rover.move(120, -120)`) where the left LED (`slot=1`) is green and the right LED (`slot=2`) is blue.
 3. **Bonus**: Place a `for side in range(4):` loop to drive forward and pivot 90 degrees four times to trace a square!
@@ -30,7 +30,7 @@ Open `missions/mission_02_thrusters.py` and run Phase 1 with the wheels propped 
 - **Hint 3 — Individual Turn-Signal LEDs**: Use `rover.rgb_led(0, 1, 0, 255, 0)` for the left LED (`slot=1`) and `rover.rgb_led(0, 2, 0, 0, 255)` for the right LED (`slot=2`).
 
 ## Mission Success Metrics
-- With the battery switch `ON`, both wheels spin forward during Phase 1.
+- With the battery switch `ON`, both wheels spin forward during the forward thruster check.
 - Reverse burn spins both wheels backward while lighting the amber beacon.
 - Pivot command rotates the rover in place with left/right turn-signal LEDs.
 - `rover.stop()` halts both motors completely at the end of the script (and if `Ctrl+C` is pressed).

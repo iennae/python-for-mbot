@@ -27,11 +27,11 @@ print("[STATUS] Telemetry Link: SECURE 🟢")
 #   3 = Both sensors off dark track (Track Lost -> Reverse / Search)
 
 try:
-    # --- PHASE 1: Single Sensor Readout ---
+    # --- Single Sensor Readout ---
     state = int(rover.get_line_follower(port=2))
     print(f"[PATROL] Initial Line Follower State (0..3): {state}")
 
-    # --- PHASE 2: Field Challenge (TODO: Autonomous Line-Following Loop) ---
+    # --- Field Challenge (TODO: Autonomous Line-Following Loop) ---
     # In a loop (`for step in range(20):`), read `state = int(rover.get_line_follower(port=2))`
     # and steer the rover based on `state`:
     #   - If `state == 0`: Both LEDs Green, drive straight `rover.move(100, 100)`
@@ -42,7 +42,7 @@ try:
     #
     # TODO: Implement your canyon navigation loop below!
 
-    # --- PHASE 3: Parking Brake ---
+    # --- Parking Brake ---
     print("[STATUS] Canyon patrol complete. Engaging parking brake...")
     rover.stop()
     rover.rgb_led(0, 0, 0, 0, 0)

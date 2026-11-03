@@ -23,23 +23,23 @@ print("[STATUS] Telemetry Link: SECURE 🟢")
 NIGHT_THRESHOLD = 300.0
 
 try:
-    # --- PHASE 1: Single Solar Flux Reading ---
+    # --- Single Solar Flux Reading ---
     lux = rover.get_light()
     print(f"[TELEMETRY] Initial Ambient Solar Flux: {lux:.1f}")
 
-    # --- PHASE 2: Field Challenge (TODO: Automatic Dusk Headlights Loop) ---
+    # --- Field Challenge (TODO: Automatic Dusk Headlights Loop) ---
     # Poll the onboard light sensor in a loop (e.g., `for sample in range(10):`):
-    #   1. Read `lux = rover.get_light()` and print the reading.
-    #   2. If `lux < NIGHT_THRESHOLD`:
-    #        - Activate high-beam white headlights: rover.rgb_led(0, 0, 255, 255, 255)
-    #        - Optional: chirp a brief alert tone with rover.buzzer(660, 100)
-    #   3. Else:
-    #        - Keep the low-power green status beacon on: rover.rgb_led(0, 0, 0, 60, 0)
-    #   4. Pause `time.sleep(0.5)` between samples.
+    #   - Read `lux = rover.get_light()` and print the reading.
+    #   - If `lux < NIGHT_THRESHOLD`:
+    #       - Activate high-beam white headlights: rover.rgb_led(0, 0, 255, 255, 255)
+    #       - Optional: chirp a brief alert tone with rover.buzzer(660, 100)
+    #   - Else:
+    #       - Keep the low-power green status beacon on: rover.rgb_led(0, 0, 0, 60, 0)
+    #   - Pause `time.sleep(0.5)` between samples.
     #
     # TODO: Write your solar monitoring loop below!
 
-    # --- PHASE 3: Standby Mode ---
+    # --- Standby Mode ---
     print("[STATUS] Solar check complete. Entering dark standby...")
     rover.rgb_led(0, 0, 0, 0, 0)
 
