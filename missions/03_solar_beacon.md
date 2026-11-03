@@ -17,7 +17,7 @@ A Martian dust squall is rolling across the Ares VII basin and solar flux is dro
 - **Onboard Light Sensor**: Located on the top front of the mCore board (`Port 6` internal). Keep it unobstructed for your baseline reading, then shade it with your hand to simulate a Martian dust storm.
 
 ## Field Challenge
-Open `missions/mission_03_solar_beacon.py` and run it once to see your room's baseline `lux` value printed in the terminal. Then complete **Phase 2 (`# TODO`)**:
+Open `missions/mission_03_solar_beacon.py` and run it once to see your room's baseline `lux` value printed in the terminal. Then complete the **Field Challenge (`# TODO`)** section:
 1. Create a loop (`for sample in range(15):`) that reads `lux = rover.get_light()` every `0.5` seconds.
 2. Print each reading to the terminal.
 3. If `lux < NIGHT_THRESHOLD`, turn both LEDs bright white (`255, 255, 255`) and print a low-light alert; otherwise, set a dim green status light (`0, 60, 0`).
@@ -37,7 +37,7 @@ Open `missions/mission_03_solar_beacon.py` and run it once to see your room's ba
   else:
       rover.rgb_led(0, 0, 0, 60, 0)
   ```
-- **Hint 3 — Tuning `NIGHT_THRESHOLD`**: If your room is naturally dim, check the number printed in Phase 1 (e.g., `180.0`) and set `NIGHT_THRESHOLD` halfway between your bright and shaded readings!
+- **Hint 3 — Tuning `NIGHT_THRESHOLD`**: If your room is naturally dim, check the baseline number printed in the terminal (e.g., `180.0`) and set `NIGHT_THRESHOLD` halfway between your bright and shaded readings!
 
 ## Mission Success Metrics
 - Terminal prints live ambient light values every 0.5 seconds.

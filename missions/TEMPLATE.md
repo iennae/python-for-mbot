@@ -17,7 +17,7 @@ Write a 2–3 sentence narrative hook setting the scene on Mars in the Ares VII 
 - **Sensor / Actuator Port**: Specify which mCore RJ25 port (`Port 1..4`) or motor port (`M1`/`M2`) is used.
 
 ## Field Challenge
-Describe the step-by-step instructions for opening the starter `.py` script in Thonny, running Phase 1, and completing the `# TODO` challenge block.
+Describe the step-by-step instructions for opening the starter `.py` script in Thonny, running the baseline diagnostic, and completing the `# TODO` challenge block.
 
 ## Progressive Hints
 - **Hint 1 — Concept Name**: Give a small syntax snippet or parameter tip.

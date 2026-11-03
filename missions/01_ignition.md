@@ -20,7 +20,7 @@ Cadet Engineer, your rover has survived descent and safely touched down in the A
 - **Firmware**: `mbot_firmware.ino` flashed via Arduino IDE (and Arduino IDE closed).
 
 ## Field Challenge
-Open `missions/mission_01_ignition.py` in Thonny and press **▶ Run (`F5`)** to verify that the Emerald Green LED and 440 Hz tone work. Then scroll to **Phase 3 (`# TODO`)** and program the rover to transmit **S.O.S.** (`... --- ...`):
+Open `missions/mission_01_ignition.py` in Thonny and press **▶ Run (`F5`)** to verify that the Emerald Green LED and 440 Hz tone work. Then scroll to the **Field Challenge (`# TODO`)** section and program the rover to transmit **S.O.S.** (`... --- ...`):
 - **S**: 3 short pulses (`0.2` seconds ON, `0.2` seconds OFF)
 - **O**: 3 long pulses (`0.6` seconds ON, `0.2` seconds OFF)
 - **S**: 3 short pulses (`0.2` seconds ON, `0.2` seconds OFF)
@@ -33,8 +33,8 @@ Open `missions/mission_01_ignition.py` in Thonny and press **▶ Run (`F5`)** to
 
 ## Mission Success Metrics
 - Terminal prints `[STATUS] Telemetry Link: SECURE 🟢` without serial errors.
-- Both onboard RGB LEDs glow Emerald Green (`0, 255, 0`) for 1.5 seconds during Phase 1.
-- The onboard buzzer sounds a 440 Hz tone during Phase 2.
+- Both onboard RGB LEDs glow Emerald Green (`0, 255, 0`) for 1.5 seconds during the optical beacon diagnostic.
+- The onboard buzzer sounds a 440 Hz tone during the audio transponder check.
 - Field Challenge: Rover transmits 3 short pulses, 3 long pulses, and 3 short pulses (`S.O.S.`) and finishes in dark standby (`0, 0, 0`).
 
 ## Flight Engineer Debrief

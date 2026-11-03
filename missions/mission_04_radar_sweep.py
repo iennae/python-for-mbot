@@ -24,11 +24,11 @@ SAFE_DISTANCE_CM = 20.0
 CAUTION_DISTANCE_CM = 40.0
 
 try:
-    # --- PHASE 1: Single Rangefinder Ping ---
+    # --- Single Rangefinder Ping ---
     distance_cm = rover.get_distance(port=3)
     print(f"[RADAR] Initial forward range: {distance_cm:.1f} cm")
 
-    # --- PHASE 2: Field Challenge (TODO: 3-Zone Proximity Alert & Evasion) ---
+    # --- Field Challenge (TODO: Proximity Alert & Evasion) ---
     # Poll `rover.get_distance(port=3)` in a loop (e.g., `for sweep in range(10):`):
     #   - DANGER (`0 < distance_cm < SAFE_DISTANCE_CM`):
     #       Flash Red (`255, 0, 0`), sound an 880 Hz alarm, reverse `rover.move(-100, -100)`
@@ -40,7 +40,7 @@ try:
     #
     # TODO: Implement your radar sweep loop below!
 
-    # --- PHASE 3: Disengage Drive ---
+    # --- Disengage Drive ---
     print("[STATUS] Radar sweep complete. Disengaging drive...")
     rover.stop()
     rover.rgb_led(0, 0, 0, 0, 0)

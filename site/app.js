@@ -47,6 +47,86 @@
       .replace(/"/g, "&quot;");
   }
 
+  function findPythonCommentIndex(line) {
+    let inSingle = false;
+    let inDouble = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === "\\" && (inSingle || inDouble)) {
+        i++;
+        continue;
+      }
+      if (ch === "'" && !inDouble) {
+        inSingle = !inSingle;
+      } else if (ch === '"' && !inSingle) {
+        inDouble = !inDouble;
+      } else if (ch === "#" && !inSingle && !inDouble) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  function highlightPythonCodeSegment(codePart) {
+    const tokenRe =
+      /(f?"(?:\\.|[^"\\])*"|f?'(?:\\.|[^'\\])*')|\b(import|from|as|try|except|finally|for|in|while|if|elif|else|def|return|class|pass|break|continue|and|or|not|True|False|None)\b|\b(print|range|int|float|str|len|bool|KeyboardInterrupt|Exception)\b|\b([A-Za-z_][A-Za-z0-9_]*)(?=\s*\()|(-?\b\d+(?:\.\d+)?\b)/g;
+    let out = "";
+    let lastIdx = 0;
+    let match;
+
+    while ((match = tokenRe.exec(codePart)) !== null) {
+      if (match.index > lastIdx) {
+        out += escapeHtml(codePart.slice(lastIdx, match.index));
+      }
+      if (match[1] !== undefined) {
+        out += '<span class="tok-string">' + escapeHtml(match[1]) + "</span>";
+      } else if (match[2] !== undefined) {
+        out += '<span class="tok-keyword">' + escapeHtml(match[2]) + "</span>";
+      } else if (match[3] !== undefined) {
+        out += '<span class="tok-builtin">' + escapeHtml(match[3]) + "</span>";
+      } else if (match[4] !== undefined) {
+        out += '<span class="tok-func">' + escapeHtml(match[4]) + "</span>";
+      } else if (match[5] !== undefined) {
+        out += '<span class="tok-number">' + escapeHtml(match[5]) + "</span>";
+      }
+      lastIdx = tokenRe.lastIndex;
+    }
+
+    if (lastIdx < codePart.length) {
+      out += escapeHtml(codePart.slice(lastIdx));
+    }
+    return out;
+  }
+
+  function highlightPython(code) {
+    const lines = String(code || "").split("\n");
+    return lines
+      .map(function (line) {
+        const commentIdx = findPythonCommentIndex(line);
+        const codePart = commentIdx >= 0 ? line.slice(0, commentIdx) : line;
+        const commentPart = commentIdx >= 0 ? line.slice(commentIdx) : "";
+
+        let rendered = highlightPythonCodeSegment(codePart);
+        if (commentPart) {
+          const trimmedComment = commentPart.trim();
+          let commentClass = "tok-comment";
+          if (trimmedComment.indexOf("TODO") !== -1) {
+            commentClass = "tok-todo";
+          } else if (trimmedComment.indexOf("# ---") === 0) {
+            commentClass = "tok-section";
+          }
+          rendered +=
+            '<span class="' +
+            commentClass +
+            '">' +
+            escapeHtml(commentPart) +
+            "</span>";
+        }
+        return rendered;
+      })
+      .join("\n");
+  }
+
   function formatInlineMarkdown(text) {
     let html = escapeHtml(text);
     // Links: [label](url)
@@ -234,7 +314,7 @@
         '<button type="button" id="copy-starter-btn" class="btn-secondary">Copy Starter Template</button>' +
         "</div>" +
         '<pre class="code-block" id="starter-code-pre">' +
-        escapeHtml(mission.starterCode) +
+        highlightPython(mission.starterCode) +
         "</pre>";
     }
 

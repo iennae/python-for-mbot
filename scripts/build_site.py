@@ -67,6 +67,19 @@ def _parse_debrief_table(section_text: str) -> list[dict[str, str]]:
     return rows
 
 
+def _strip_license_header(code_text: str) -> str:
+    """Strip leading Apache 2.0 `# Copyright ...` boilerplate so the web UI displays clean code."""
+    lines = code_text.splitlines()
+    if not lines or not lines[0].startswith("# Copyright "):
+        return code_text
+    idx = 0
+    while idx < len(lines) and lines[idx].startswith("#"):
+        idx += 1
+    while idx < len(lines) and not lines[idx].strip():
+        idx += 1
+    return "\n".join(lines[idx:]) + "\n"
+
+
 def parse_mission_file(md_path: Path) -> dict[str, object]:
     """Parse a numbered `missions/XX_*.md` file and attach its starter `.py` code."""
     text = md_path.read_text(encoding="utf-8")
@@ -112,7 +125,7 @@ def parse_mission_file(md_path: Path) -> dict[str, object]:
         script_path = MISSIONS_DIR / script_name
         if not script_path.is_file():
             raise FileNotFoundError(f"{md_path}: Referenced script '{script_name}' not found")
-        starter_code = script_path.read_text(encoding="utf-8")
+        starter_code = _strip_license_header(script_path.read_text(encoding="utf-8"))
 
     requires_battery = meta.get("requires battery", "false").lower() == "true"
 
