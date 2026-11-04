@@ -1,0 +1,79 @@
+[
+  {
+    "id": "launchpad_readiness",
+    "title": "So You've Built Your mBot — Time to Take It to Mars",
+    "badge": "Pre-Flight & Launchpad Readiness",
+    "requires_battery": false,
+    "files": {
+      "story": "launchpad_readiness.md",
+      "starter": null,
+      "test": null
+    }
+  },
+  {
+    "id": "ignition",
+    "title": "Ignition & Telemetry Handshake",
+    "badge": "Optical & Audio Transponder",
+    "requires_battery": false,
+    "files": {
+      "story": "ignition.md",
+      "starter": "ignition.py",
+      "test": "test_ignition.py"
+    }
+  },
+  {
+    "id": "preflight_testing",
+    "title": "Digital Twin & Pre-Flight Unit Testing",
+    "badge": "Simulation & Verification",
+    "requires_battery": false,
+    "files": {
+      "story": "preflight_testing.md",
+      "starter": "preflight_testing.py",
+      "test": "test_preflight_testing.py"
+    }
+  },
+  {
+    "id": "thrusters",
+    "title": "Drive Thruster Calibration",
+    "badge": "Differential Mobility & Braking",
+    "requires_battery": true,
+    "files": {
+      "story": "thrusters.md",
+      "starter": "thrusters.py",
+      "test": "test_thrusters.py"
+    }
+  },
+  {
+    "id": "solar_beacon",
+    "title": "Solar Array & Dusk Protocol",
+    "badge": "Onboard Light Telemetry & Conditionals",
+    "requires_battery": false,
+    "files": {
+      "story": "solar_beacon.md",
+      "starter": "solar_beacon.py",
+      "test": "test_solar_beacon.py"
+    }
+  },
+  {
+    "id": "radar_sweep",
+    "title": "Ultrasonic Radar & Boulder Evasion",
+    "badge": "Acoustic Rangefinding & Collision Avoidance",
+    "requires_battery": true,
+    "files": {
+      "story": "radar_sweep.md",
+      "starter": "radar_sweep.py",
+      "test": "test_radar_sweep.py"
+    }
+  },
+  {
+    "id": "canyon_patrol",
+    "title": "Canyon Conduit Navigation",
+    "badge": "Infrared Line-Follower State Machine",
+    "requires_battery": true,
+    "files": {
+      "story": "canyon_patrol.md",
+      "starter": "canyon_patrol.py",
+      "test": "test_canyon_patrol.py"
+    }
+  }
+]

@@ -1,8 +1,4 @@
-# Mission 00: So You've Built Your mBot — Time to Take It to Mars
-
-- **Badge**: Pre-Flight & Launchpad Readiness
-- **Script**: None
-- **Requires Battery**: false
+# So You've Built Your mBot — Time to Take It to Mars
 
 ## Story Briefing
 You have finished assembling your mBot rover on Earth! Right now, its onboard computer only knows the factory remote-control demo. Before launching to the Ares VII basin on Mars, we must inspect the rover's wiring, load the **Mars Telemetry Firmware (`mbot_firmware.ino`)** onto its core, and prime your laptop as **Mission Control**.
@@ -20,7 +16,7 @@ You have finished assembling your mBot rover on Earth! Right now, its onboard co
 - **Battery Pack**: 4x AA battery holder (or 3.7V LiPo) plugged into the power jack.
 
 ## Field Challenge
-Follow the three launchpad preparation stages below to get your rover and laptop ready for Mission 01:
+Follow the three launchpad preparation stages below to get your rover and laptop ready for ignition:
 
 1. **Stage A — Flash the Rover Brain in Arduino IDE (One-Time Setup)**:
    - Install the **[Arduino IDE](https://www.arduino.cc/en/software)** *(if on Windows/macOS and no USB port appears when the mBot is plugged in, install the [WCH CH340 USB driver](https://learn.sparkfun.com/tutorials/how-to-install-ch340-drivers/all))*.
@@ -32,7 +28,7 @@ Follow the three launchpad preparation stages below to get your rover and laptop
    - Download and open **[Thonny](https://thonny.org/)** (Python 3 is built right in).
    - Clone or download **[`iennae/python-for-mbot`](https://github.com/iennae/python-for-mbot)**.
    - In Thonny, click **`Tools -> Open system shell...`** and run `pip install -e .` inside the `python-for-mbot` folder *(or click **`Tools -> Manage packages...`**, search for **`pyserial`**, and click **Install**)*.
-3. **Stage C — Verify theRover Test Stand Rule**:
+3. **Stage C — Verify the Rover Test Stand Rule**:
    - LEDs, the buzzer, and sensors work on USB cable power alone, but **the drive motors (`M1`/`M2`) only spin when the battery pack is connected and the mBot power switch is toggled `ON`**. Keep a small block handy to prop the wheels off the desk when testing motor scripts!
 
 ## Progressive Hints
@@ -52,4 +48,4 @@ Follow the three launchpad preparation stages below to get your rover and laptop
 | `mCore` (`ATmega328P`) | The 8-bit Arduino Uno microcontroller onboard the original mBot. |
 | `mbot_firmware.ino` | The C++ transceiver program flashed once onto the mBot so it understands live serial commands at `115200` baud. |
 | `USB Umbilical Cable` | Carries live command packets from Python on your laptop to the rover and returns sensor telemetry. |
-| `Thonny IDE` | Your ground-station code editor where you edit `missions/mission_XX_*.py` and press **▶ Run (`F5`)**. |
+| `Thonny IDE` | Your ground-station code editor where you edit `missions/*.py` and press **▶ Run (`F5`)**. |

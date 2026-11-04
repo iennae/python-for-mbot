@@ -171,10 +171,14 @@ class mLoopback:
     def __init__(self):
         self.sent_packages = []
         self.rx_buffer = bytearray()
+        self.sensor_overrides = {}
         self._open = False
 
     def start(self):
         self._open = True
+
+    def set_sensor_value(self, device_id, value):
+        self.sensor_overrides[int(device_id)] = value
 
     def writePackage(self, package):
         data = bytearray(package)
@@ -184,10 +188,18 @@ class mLoopback:
         if len(data) >= 6 and data[0] == 0xFF and data[1] == 0x55 and data[4] == 0x01:
             ext_id = data[3]
             device_id = data[5]
+            override = self.sensor_overrides.get(device_id)
+            if isinstance(override, list) and override:
+                val = override.pop(0) if len(override) > 1 else override[0]
+            elif override is not None:
+                val = override
+            else:
+                val = 0 if device_id == 0x1F else 42.0
+
             if device_id == 0x1F:  # BUTTON_INNER -> byte (type 1)
-                self.queueResponse(ext_id, 1, [0])
-            else:  # float sensor response (type 2), default 42.0
-                self.queueResponse(ext_id, 2, list(struct.pack("<f", 42.0)))
+                self.queueResponse(ext_id, 1, [int(bool(val))])
+            else:  # float sensor response (type 2)
+                self.queueResponse(ext_id, 2, list(struct.pack("<f", float(val))))
 
     def queueResponse(self, ext_id, data_type, payload_bytes):
         frame = bytearray([0xFF, 0x55, ext_id & 0xFF, data_type & 0xFF])
@@ -226,6 +238,7 @@ class mBot:
         self.isParseStartIndex = 0
         self.device = None
         self._reader_thread = None
+        self.command_log = []
 
         if threading.current_thread() is threading.main_thread():
             try:
@@ -332,7 +345,45 @@ class mBot:
     def _clamp_byte(val):
         return max(0, min(255, int(val)))
 
+    def clear_command_log(self):
+        """Clear the recorded high-level command history."""
+        self.command_log.clear()
+
+    def set_simulated_sensor(self, sensor_name, value):
+        """Configure simulated sensor return value(s) when running with `mbot(simulate=True)`.
+
+        `sensor_name` may be `'ultrasonic'`/`'distance'`, `'light'`, `'line_follower'`, or
+        `'button'`. `value` may be a single float/int or a list of values to return on
+        successive reads.
+        """
+        sensor_map = {
+            "ultrasonic": 0x01,
+            "distance": 0x01,
+            "light": 0x03,
+            "line_follower": 0x11,
+            "button": 0x1F,
+        }
+        key = str(sensor_name).lower().strip()
+        if key not in sensor_map:
+            raise ValueError(f"Unknown sensor '{sensor_name}'. Expected one of {list(sensor_map)}")
+        if isinstance(self.device, mLoopback):
+            self.device.set_sensor_value(sensor_map[key], value)
+
     def doRGBLed(self, port, slot, index, red, green, blue):
+        r = self._clamp_byte(red)
+        g = self._clamp_byte(green)
+        b = self._clamp_byte(blue)
+        self.command_log.append(
+            {
+                "action": "rgb_led",
+                "port": self._clamp_byte(port),
+                "slot": self._clamp_byte(slot),
+                "index": self._clamp_byte(index),
+                "r": r,
+                "g": g,
+                "b": b,
+            }
+        )
         self.__writePackage(
             bytearray(
                 [
@@ -345,9 +396,9 @@ class mBot:
                     self._clamp_byte(port),
                     self._clamp_byte(slot),
                     self._clamp_byte(index),
-                    self._clamp_byte(red),
-                    self._clamp_byte(green),
-                    self._clamp_byte(blue),
+                    r,
+                    g,
+                    b,
                 ]
             )
         )
@@ -356,6 +407,9 @@ class mBot:
         self.doRGBLed(0x07, 0x02, index, red, green, blue)
 
     def doMotor(self, port, speed):
+        self.command_log.append(
+            {"action": "motor", "port": self._clamp_byte(port), "speed": int(speed)}
+        )
         self.__writePackage(
             bytearray(
                 [0xFF, 0x55, 0x06, 0x00, 0x02, 0x0A, self._clamp_byte(port)]
@@ -364,6 +418,9 @@ class mBot:
         )
 
     def doMove(self, leftSpeed, rightSpeed):
+        self.command_log.append(
+            {"action": "move", "left": int(leftSpeed), "right": int(rightSpeed)}
+        )
         self.__writePackage(
             bytearray(
                 [0xFF, 0x55, 0x07, 0x00, 0x02, 0x05]
@@ -373,6 +430,14 @@ class mBot:
         )
 
     def doServo(self, port, slot, angle):
+        self.command_log.append(
+            {
+                "action": "servo",
+                "port": self._clamp_byte(port),
+                "slot": self._clamp_byte(slot),
+                "angle": self._clamp_byte(angle),
+            }
+        )
         self.__writePackage(
             bytearray(
                 [
@@ -390,6 +455,9 @@ class mBot:
         )
 
     def doBuzzer(self, buzzer, time=0):
+        self.command_log.append(
+            {"action": "buzzer", "frequency_hz": int(buzzer), "duration_ms": int(time)}
+        )
         self.__writePackage(
             bytearray(
                 [0xFF, 0x55, 0x07, 0x00, 0x02, 0x22]
@@ -532,6 +600,7 @@ class mBot:
 
     def stop(self):
         """Halt both drive motors."""
+        self.command_log.append({"action": "stop", "left": 0, "right": 0})
         self.doMove(0, 0)
 
     def _sync_request(self, dispatch_fn, timeout=1.0, default=None):

@@ -318,6 +318,20 @@
         "</pre>";
     }
 
+    let testCodeSection = "";
+    if (mission.testCode) {
+      testCodeSection =
+        '<div class="code-header">' +
+        '<span class="code-filename">🧪 Pre-Flight Unit Test (Digital Twin Simulator): ' +
+        escapeHtml(mission.testPath || mission.testName) +
+        "</span>" +
+        '<button type="button" id="copy-test-btn" class="btn-secondary">Copy Unit Test</button>' +
+        "</div>" +
+        '<pre class="code-block" id="test-code-pre">' +
+        highlightPython(mission.testCode) +
+        "</pre>";
+    }
+
     const hintsHtml = (mission.hints || [])
       .map(function (hint, hIdx) {
         const parts = hint.split(":");
@@ -430,11 +444,12 @@
       "</section>" +
       "</div>" +
       '<section class="card">' +
-      '<h3 class="section-title">🚀 Field Challenge & Starter Template</h3>' +
+      '<h3 class="section-title">🚀 Field Challenge, Starter Code & Pre-Flight Tests</h3>' +
       '<div class="challenge-prose">' +
       renderRichText(mission.challenge) +
       "</div>" +
       starterCodeSection +
+      testCodeSection +
       "</section>" +
       '<section class="card">' +
       '<h3 class="section-title">💡 Progressive Field Hints <span>(Click to expand if stuck)</span></h3>' +
@@ -469,6 +484,13 @@
     if (copyBtn && mission.starterCode) {
       copyBtn.addEventListener("click", function () {
         copyTextToClipboard(mission.starterCode, copyBtn);
+      });
+    }
+
+    const copyTestBtn = document.getElementById("copy-test-btn");
+    if (copyTestBtn && mission.testCode) {
+      copyTestBtn.addEventListener("click", function () {
+        copyTextToClipboard(mission.testCode, copyTestBtn);
       });
     }
 

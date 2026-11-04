@@ -53,5 +53,5 @@ select = ["E", "F", "W", "I", "UP"]
 "missions/*.py" = ["F401", "F403", "F405"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["src", "."]
+testpaths = ["tests", "missions"]
+pythonpath = ["src", ".", "missions"]

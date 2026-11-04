@@ -20,11 +20,21 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def test_missions_load_with_complete_sections() -> None:
-    """Verify all numbered missions (00..05) contain required sections and starter templates."""
+    """Verify all missions in `missions/missions.json` load with story, starter, and test files."""
     missions = load_all_missions()
-    assert len(missions) >= 6
+    assert len(missions) >= 7
     numbers = [m["number"] for m in missions]
-    assert numbers[:6] == ["00", "01", "02", "03", "04", "05"]
+    assert numbers[:7] == ["00", "01", "02", "03", "04", "05", "06"]
+    slugs = [m["slug"] for m in missions]
+    assert slugs[:7] == [
+        "launchpad_readiness",
+        "ignition",
+        "preflight_testing",
+        "thrusters",
+        "solar_beacon",
+        "radar_sweep",
+        "canyon_patrol",
+    ]
 
     for mission in missions:
         assert mission["title"]
@@ -35,9 +45,11 @@ def test_missions_load_with_complete_sections() -> None:
         assert len(mission["hints"]) >= 2
         assert len(mission["successMetrics"]) >= 3
         assert len(mission["debrief"]) >= 2
-        if mission["number"] != "00":
+        if mission["slug"] != "launchpad_readiness":
             assert mission["starterCode"] is not None
             assert "TODO" in mission["starterCode"]
+            assert mission["testCode"] is not None
+            assert "def test_" in mission["testCode"]
 
 
 def test_site_missions_data_js_is_in_sync(tmp_path: Path) -> None:
