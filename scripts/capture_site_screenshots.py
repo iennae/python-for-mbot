@@ -64,9 +64,9 @@ def capture_screenshots(output_dir: Path, site_index: Path = SITE_INDEX) -> list
         )
 
         # 2. Mission 01: Ignition & Telemetry (with Hint #1 expanded)
-        page.click("#nav-btn-mission-ignition")
+        page.click("#nav-btn-mission-01")
         page.wait_for_selector("#starter-code-pre")
-        hint_summary = page.locator("#hint-mission-ignition-0 > summary")
+        hint_summary = page.locator("#hint-mission-01-0 > summary")
         if hint_summary.count() > 0:
             hint_summary.click()
         shot_02 = "02-mission-01-ignition.png"
@@ -79,7 +79,7 @@ def capture_screenshots(output_dir: Path, site_index: Path = SITE_INDEX) -> list
         )
 
         # 3. Mission 02: Digital Twin & Pre-Flight Unit Testing
-        page.click("#nav-btn-mission-preflight_testing")
+        page.click("#nav-btn-mission-02")
         page.wait_for_selector("#test-code-pre")
         shot_02b = "02b-mission-02-preflight-testing.png"
         page.screenshot(path=str(output_dir / shot_02b), full_page=True)
