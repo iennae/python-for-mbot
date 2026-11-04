@@ -1,0 +1,18 @@
+[
+  {
+    "filename": "01-mission-00-launchpad.png",
+    "title": "Mission 00: Launchpad Readiness (Default Landing View)"
+  },
+  {
+    "filename": "02-mission-01-ignition.png",
+    "title": "Mission 01: Ignition & Telemetry (Starter Code & Pre-Flight Test)"
+  },
+  {
+    "filename": "02b-mission-02-preflight-testing.png",
+    "title": "Mission 02: Digital Twin & Pre-Flight Unit Testing"
+  },
+  {
+    "filename": "03-add-mission-modal.png",
+    "title": "How to Add a New Mission Modal"
+  }
+]
