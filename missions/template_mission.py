@@ -16,28 +16,33 @@ import time
 
 from mbot import *
 
-print("[UPLINK] Initiating handshake with Rover...")
-rover = mbot()
-print("[STATUS] Telemetry Link: SECURE 🟢")
 
-try:
-    # --- Baseline Diagnostic ---
-    print("[DIAGNOSTIC] Running baseline systems check...")
-    rover.rgb_led(0, 0, 0, 180, 255)
-    time.sleep(1.0)
+def run_mission(rover):
+    try:
+        # --- Baseline Diagnostic ---
+        print("[DIAGNOSTIC] Running baseline systems check...")
+        rover.rgb_led(0, 0, 0, 180, 255)
+        time.sleep(1.0)
 
-    # --- Field Challenge (TODO) ---
-    # Describe the challenge steps in comments here so the learner
-    # has a clear starting point in their editor.
-    #
-    # TODO: Write your mission code here!
+        # --- Field Challenge (TODO) ---
+        # Describe the challenge steps in comments here so the learner
+        # has a clear starting point in their editor.
+        #
+        # TODO: Write your mission code here!
 
-    # --- Safe Standby ---
-    print("[STATUS] Mission complete. Entering dark standby...")
-    rover.stop()
-    rover.rgb_led(0, 0, 0, 0, 0)
+        # --- Safe Standby ---
+        print("[STATUS] Mission complete. Entering dark standby...")
+        rover.stop()
+        rover.rgb_led(0, 0, 0, 0, 0)
 
-except KeyboardInterrupt:
-    print("\n[ABORT] Manual abort received from Flight Control!")
-    rover.stop()
-    rover.rgb_led(0, 0, 0, 0, 0)
+    except KeyboardInterrupt:
+        print("\n[ABORT] Manual abort received from Flight Control!")
+        rover.stop()
+        rover.rgb_led(0, 0, 0, 0, 0)
+
+
+if __name__ == "__main__":
+    print("[UPLINK] Initiating handshake with Rover...")
+    rover = mbot()
+    print("[STATUS] Telemetry Link: SECURE 🟢")
+    run_mission(rover)

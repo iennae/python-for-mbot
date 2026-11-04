@@ -74,7 +74,7 @@ cd python-for-mbot
 1. Download and open **[Thonny](https://thonny.org/)** (which includes Python 3 built in).
 2. Install the package in Thonny:
    * Click **`Tools -> Open system shell...`** and run `pip install -e .` inside the `python-for-mbot` folder *(or click **`Tools -> Manage packages...`**, search for **`pyserial`**, and click **Install**)*.
-3. Click **`File -> Open...`**, select [`missions/mission_01_ignition.py`](missions/mission_01_ignition.py), and click the green **▶ Run (`F5`)** button!
+3. Click **`File -> Open...`**, select [`missions/ignition.py`](missions/ignition.py) (or validate first with [`missions/test_ignition.py`](missions/test_ignition.py)), and click the green **▶ Run (`F5`)** button!
 
 ### Option B: Using Terminal / VS Code (`venv`)
 ```bash
@@ -90,18 +90,21 @@ pip install -e .
 ## Step 3: Launch the Ares VII Rover Missions (`missions/` & `site/`)
 
 * **Offline Mission Control Website**: Double-click [`site/index.html`](site/index.html) in your file manager (`Finder` / `File Explorer`) to open the interactive **Ares VII Rover — Mission Control** guide directly in your browser (works 100% offline via `file://` with no web server required), or view the deployed GitHub Pages site.
-* **Starter Mission Scripts (`missions/`)**:
-  * [`missions/00_launchpad_readiness.md`](missions/00_launchpad_readiness.md) — **Mission 00: Launchpad Readiness** (Wiring check, Arduino IDE firmware upload, and Thonny setup)
-  * [`missions/mission_01_ignition.py`](missions/mission_01_ignition.py) — **Mission 01: Ignition & Telemetry Handshake** (RGB LEDs, Buzzer & S.O.S. Challenge)
-  * [`missions/mission_02_thrusters.py`](missions/mission_02_thrusters.py) — **Mission 02: Drive Thruster Calibration** (Forward, Reverse, Pivot & Stop)
-  * [`missions/mission_03_solar_beacon.py`](missions/mission_03_solar_beacon.py) — **Mission 03: Solar Array & Dusk Protocol** (Onboard Light Sensor)
-  * [`missions/mission_04_radar_sweep.py`](missions/mission_04_radar_sweep.py) — **Mission 04: Ultrasonic Radar & Boulder Evasion** (Ultrasonic Rangefinder)
-  * [`missions/mission_05_canyon_patrol.py`](missions/mission_05_canyon_patrol.py) — **Mission 05: Canyon Conduit Navigation** (Dual IR Line Follower)
-* **Adding New Missions**: Copy [`missions/TEMPLATE.md`](missions/TEMPLATE.md) and [`missions/template_mission.py`](missions/template_mission.py), then run `python scripts/build_site.py` to update `site/missions_data.js`.
-* **Dry-Run Simulation Mode (No Hardware Required)**:
-  ```bash
-  MBOT_SIMULATE=1 python missions/mission_01_ignition.py
-  ```
+* **Manifest-Ordered Missions (`missions/missions.json`)**: Each mission defines its story briefing (`*.md`), starter code (`*.py`), and Digital Twin pre-flight unit test (`test_*.py`) without hardcoded numbers in filenames:
+  * **Mission 00 — Launchpad Readiness**: [`missions/launchpad_readiness.md`](missions/launchpad_readiness.md) (Wiring check, Arduino IDE firmware upload, and Thonny setup)
+  * **Mission 01 — Ignition & Telemetry Handshake**: [`missions/ignition.py`](missions/ignition.py) & [`missions/test_ignition.py`](missions/test_ignition.py)
+  * **Mission 02 — Digital Twin & Pre-Flight Unit Testing**: [`missions/preflight_testing.py`](missions/preflight_testing.py) & [`missions/test_preflight_testing.py`](missions/test_preflight_testing.py)
+  * **Mission 03 — Drive Thruster Calibration**: [`missions/thrusters.py`](missions/thrusters.py) & [`missions/test_thrusters.py`](missions/test_thrusters.py)
+  * **Mission 04 — Solar Array & Dusk Protocol**: [`missions/solar_beacon.py`](missions/solar_beacon.py) & [`missions/test_solar_beacon.py`](missions/test_solar_beacon.py)
+  * **Mission 05 — Ultrasonic Radar & Boulder Evasion**: [`missions/radar_sweep.py`](missions/radar_sweep.py) & [`missions/test_radar_sweep.py`](missions/test_radar_sweep.py)
+  * **Mission 06 — Canyon Conduit Navigation**: [`missions/canyon_patrol.py`](missions/canyon_patrol.py) & [`missions/test_canyon_patrol.py`](missions/test_canyon_patrol.py)
+* **Adding or Reordering Missions**: Copy [`missions/TEMPLATE.md`](missions/TEMPLATE.md), [`missions/template_mission.py`](missions/template_mission.py), and [`missions/test_template_mission.py`](missions/test_template_mission.py), add an entry in [`missions/missions.json`](missions/missions.json), and run `python scripts/build_site.py` to update `site/missions_data.js`.
+* **Running Pre-Flight Unit Tests (Thonny or `pytest`, No Hardware Required)**:
+  * In **Thonny**: Open any `missions/test_*.py` file and press **▶ Run (`F5`)**.
+  * In a **Terminal**:
+    ```bash
+    pytest
+    ```
 
 ---
 

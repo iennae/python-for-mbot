@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Build `site/missions_data.js` from Markdown briefings and starter `.py` scripts in `missions/`.
+"""Build `site/missions_data.js` from `missions/missions.json` and associated mission files.
 
 Uses only the Python standard library so it can be run offline from a terminal or directly
 inside Thonny by pressing Run (F5).
@@ -22,11 +22,11 @@ inside Thonny by pressing Run (F5).
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 MISSIONS_DIR = REPO_ROOT / "missions"
+MANIFEST_JSON = MISSIONS_DIR / "missions.json"
 SITE_DIR = REPO_ROOT / "site"
 OUTPUT_JS = SITE_DIR / "missions_data.js"
 
@@ -55,7 +55,6 @@ def _parse_debrief_table(section_text: str) -> list[dict[str, str]]:
         cells = [cell.strip() for cell in line.strip("|").split("|")]
         if len(cells) < 2:
             continue
-        # Skip header and alignment separator rows
         if cells[0].startswith(":-") or cells[0].startswith("--"):
             continue
         if cells[0].lower() in {"code command", "component"}:
@@ -80,24 +79,14 @@ def _strip_license_header(code_text: str) -> str:
     return "\n".join(lines[idx:]) + "\n"
 
 
-def parse_mission_file(md_path: Path) -> dict[str, object]:
-    """Parse a numbered `missions/XX_*.md` file and attach its starter `.py` code."""
+def _parse_story_sections(md_path: Path) -> tuple[str, dict[str, str]]:
+    """Parse heading and `## ` sections from a mission story Markdown file."""
     text = md_path.read_text(encoding="utf-8")
     lines = text.splitlines()
-
     if not lines or not lines[0].startswith("# "):
-        raise ValueError(f"{md_path}: First line must be a '# Mission XX: ...' heading")
+        raise ValueError(f"{md_path}: First line must be a '# ...' heading")
 
-    full_title = lines[0][2:].strip()
-    match = re.match(r"^Mission\s+(\d+)\s*:\s*(.+)$", full_title, re.IGNORECASE)
-    if match:
-        number = match.group(1)
-        title = match.group(2).strip()
-    else:
-        number = md_path.name.split("_", 1)[0]
-        title = full_title
-
-    # Split by `## ` headings
+    heading_title = lines[0][2:].strip()
     sections: dict[str, str] = {}
     current_heading = "_meta"
     buffer: list[str] = []
@@ -110,34 +99,65 @@ def parse_mission_file(md_path: Path) -> dict[str, object]:
         else:
             buffer.append(line)
     sections[current_heading] = "\n".join(buffer).strip()
+    return heading_title, sections
 
-    # Parse metadata bullets in `_meta`
-    meta: dict[str, str] = {}
-    for item in _parse_bullets(sections.get("_meta", "")):
-        meta_match = re.match(r"^\*\*(.+?)\*\*\s*:\s*(.+)$", item)
-        if meta_match:
-            meta[meta_match.group(1).strip().lower()] = meta_match.group(2).strip()
 
-    script_raw = meta.get("script", "None")
-    script_name = None if script_raw.lower() == "none" else script_raw
+def parse_mission_entry(
+    entry: dict[str, object], index: int, missions_dir: Path = MISSIONS_DIR
+) -> dict[str, object]:
+    """Build a mission record from a `missions/missions.json` entry and its associated files."""
+    number = f"{index:02d}"
+    mission_id = str(entry.get("id") or f"mission-{number}")
+    files = entry.get("files")
+    if not isinstance(files, dict) or not files.get("story"):
+        raise ValueError(f"Mission '{mission_id}' must define files.story in missions.json")
+
+    story_name = str(files["story"])
+    story_path = missions_dir / story_name
+    if not story_path.is_file():
+        raise FileNotFoundError(f"Mission '{mission_id}': story file '{story_name}' not found")
+
+    heading_title, sections = _parse_story_sections(story_path)
+    title = str(entry.get("title") or heading_title)
+    full_title = f"Mission {number}: {title}"
+
+    starter_raw = files.get("starter")
+    starter_name = str(starter_raw) if starter_raw else None
     starter_code = None
-    if script_name:
-        script_path = MISSIONS_DIR / script_name
-        if not script_path.is_file():
-            raise FileNotFoundError(f"{md_path}: Referenced script '{script_name}' not found")
-        starter_code = _strip_license_header(script_path.read_text(encoding="utf-8"))
+    if starter_name:
+        starter_path = missions_dir / starter_name
+        if not starter_path.is_file():
+            raise FileNotFoundError(
+                f"Mission '{mission_id}': starter file '{starter_name}' not found"
+            )
+        starter_code = _strip_license_header(starter_path.read_text(encoding="utf-8"))
 
-    requires_battery = meta.get("requires battery", "false").lower() == "true"
+    test_raw = files.get("test")
+    test_name = str(test_raw) if test_raw else None
+    test_code = None
+    if test_name:
+        test_path = missions_dir / test_name
+        if not test_path.is_file():
+            raise FileNotFoundError(f"Mission '{mission_id}': test file '{test_name}' not found")
+        test_code = _strip_license_header(test_path.read_text(encoding="utf-8"))
 
     return {
         "id": f"mission-{number}",
+        "slug": mission_id,
         "number": number,
         "title": title,
         "fullTitle": full_title,
-        "badge": meta.get("badge", "Rover Mission"),
-        "scriptName": script_name,
-        "scriptPath": f"missions/{script_name}" if script_name else None,
-        "requiresBattery": requires_battery,
+        "badge": str(entry.get("badge", "Rover Mission")),
+        "files": {
+            "story": f"missions/{story_name}",
+            "starter": f"missions/{starter_name}" if starter_name else None,
+            "test": f"missions/{test_name}" if test_name else None,
+        },
+        "scriptName": starter_name,
+        "scriptPath": f"missions/{starter_name}" if starter_name else None,
+        "testName": test_name,
+        "testPath": f"missions/{test_name}" if test_name else None,
+        "requiresBattery": bool(entry.get("requires_battery", False)),
         "story": sections.get("Story Briefing", ""),
         "objectives": _parse_bullets(sections.get("Primary Objectives", "")),
         "systemsCheck": _parse_bullets(sections.get("Systems Check", "")),
@@ -146,13 +166,22 @@ def parse_mission_file(md_path: Path) -> dict[str, object]:
         "successMetrics": _parse_bullets(sections.get("Mission Success Metrics", "")),
         "debrief": _parse_debrief_table(sections.get("Flight Engineer Debrief", "")),
         "starterCode": starter_code,
+        "testCode": traveled_code if (traveled_code := test_code) else None,
     }
 
 
 def load_all_missions(missions_dir: Path = MISSIONS_DIR) -> list[dict[str, object]]:
-    """Discover and parse all `XX_*.md` files in `missions/` in numeric order."""
-    md_files = sorted(path for path in missions_dir.glob("[0-9][0-9]_*.md") if path.is_file())
-    return [parse_mission_file(md_file) for md_file in md_files]
+    """Load all missions in the order defined by `missions/missions.json`."""
+    manifest_path = missions_dir / "missions.json"
+    if not manifest_path.is_file():
+        raise FileNotFoundError(f"Mission manifest not found: {manifest_path}")
+    entries = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if not isinstance(entries, list):
+        raise ValueError(f"{manifest_path}: Expected a top-level JSON array of mission objects")
+    return [
+        parse_mission_entry(entry, idx, missions_dir=missions_dir)
+        for idx, entry in enumerate(entries)
+    ]
 
 
 def build_site_data(output_path: Path = OUTPUT_JS) -> list[dict[str, object]]:
@@ -176,7 +205,7 @@ def build_site_data(output_path: Path = OUTPUT_JS) -> list[dict[str, object]]:
         " * See the License for the specific language governing permissions and\n"
         " * limitations under the License.\n"
         " */\n\n"
-        "// Auto-generated by scripts/build_site.py from missions/*.md and missions/*.py\n"
+        "// Auto-generated by scripts/build_site.py from missions/missions.json\n"
         "// Do not edit directly; edit files in missions/ and run: python scripts/build_site.py\n"
         f"window.MISSIONS_DATA = {payload};\n"
     )

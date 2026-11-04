@@ -1,30 +1,31 @@
 # 🛰️ Ares VII Rover — Python Mission Curriculum (`missions/`)
 
-This directory contains the mission briefings and starter Python templates for the **Original Makeblock mBot (`mCore`)**.
+This directory contains the mission manifest ([`missions.json`](missions.json)), story briefings (`*.md`), starter Python scripts (`*.py`), and Digital Twin pre-flight unit tests (`test_*.py`) for the **Original Makeblock mBot (`mCore`)**.
 
-> **Offline Website**: Open [`../site/index.html`](../site/index.html) directly in any browser (by double-clicking the file in Finder / File Explorer) for the interactive **Ares VII Mission Control** interface with collapsible hints, copyable starter templates, and interactive success metric checklists!
-
----
-
-## 📋 Mission Roster
-
-| Mission | Briefing File | Starter Template | Focus |
-| :--- | :--- | :--- | :--- |
-| **Mission 00** | [`00_launchpad_readiness.md`](00_launchpad_readiness.md) | *(Pre-Flight Setup)* | Wiring check, Arduino IDE (`mbot_firmware.ino`), and Thonny setup |
-| **Mission 01** | [`01_ignition.md`](01_ignition.md) | [`mission_01_ignition.py`](mission_01_ignition.py) | USB serial handshake, RGB LEDs, piezo buzzer, and S.O.S. Morse challenge |
-| **Mission 02** | [`02_thrusters.md`](02_thrusters.md) | [`mission_02_thrusters.py`](mission_02_thrusters.py) | Differential drive thrusters (`M1`/`M2`), reverse, pivot turns, and braking |
-| **Mission 03** | [`03_solar_beacon.md`](03_solar_beacon.md) | [`mission_03_solar_beacon.py`](mission_03_solar_beacon.py) | Polling the onboard light sensor and automatic Dusk Protocol headlights |
-| **Mission 04** | [`04_radar_sweep.md`](04_radar_sweep.md) | [`mission_04_radar_sweep.py`](mission_04_radar_sweep.py) | Ultrasonic rangefinder (`Port 3`) 3-zone proximity alerts and boulder evasion |
-| **Mission 05** | [`05_canyon_patrol.md`](05_canyon_patrol.md) | [`mission_05_canyon_patrol.py`](mission_05_canyon_patrol.py) | Dual IR line-follower (`Port 2`) 4-state canyon conduit navigation |
+> **Offline Website**: Open [`../site/index.html`](../site/index.html) directly in any browser (by double-clicking the file in Finder / File Explorer) for the interactive **Ares VII Mission Control** interface with collapsible hints, syntax-highlighted starter templates and unit tests, and interactive success metric checklists!
 
 ---
 
-## ➕ How to Add a New Mission
+## 📋 Mission Roster (Ordered via [`missions.json`](missions.json))
 
-The website (`site/`) is generated automatically from the files in this `missions/` folder using only Python's standard library:
+| Order | Mission ID | Story File | Starter Code | Pre-Flight Unit Test | Focus |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **00** | `launchpad_readiness` | [`launchpad_readiness.md`](launchpad_readiness.md) | *(Pre-Flight Setup)* | *(Pre-Flight Setup)* | Wiring check, Arduino IDE (`mbot_firmware.ino`), and Thonny setup |
+| **01** | `ignition` | [`ignition.md`](ignition.md) | [`ignition.py`](ignition.py) | [`test_ignition.py`](test_ignition.py) | USB serial handshake, RGB LEDs, piezo buzzer, and S.O.S. Morse challenge |
+| **02** | `preflight_testing` | [`preflight_testing.md`](preflight_testing.md) | [`preflight_testing.py`](preflight_testing.py) | [`test_preflight_testing.py`](test_preflight_testing.py) | Digital Twin simulator (`mbot(simulate=True)`), `rover.command_log`, and `assert` unit testing |
+| **03** | `thrusters` | [`thrusters.md`](thrusters.md) | [`thrusters.py`](thrusters.py) | [`test_thrusters.py`](test_thrusters.py) | Differential drive thrusters (`M1`/`M2`), reverse, pivot turns, and braking |
+| **04** | `solar_beacon` | [`solar_beacon.md`](solar_beacon.md) | [`solar_beacon.py`](solar_beacon.py) | [`test_solar_beacon.py`](test_solar_beacon.py) | Polling the onboard light sensor and automatic Dusk Protocol headlights |
+| **05** | `radar_sweep` | [`radar_sweep.md`](radar_sweep.md) | [`radar_sweep.py`](radar_sweep.py) | [`test_radar_sweep.py`](test_radar_sweep.py) | Ultrasonic rangefinder (`Port 3`) proximity alerts and boulder evasion |
+| **06** | `canyon_patrol` | [`canyon_patrol.md`](canyon_patrol.md) | [`canyon_patrol.py`](canyon_patrol.py) | [`test_canyon_patrol.py`](test_canyon_patrol.py) | Dual IR line-follower (`Port 2`) 4-state canyon conduit navigation |
 
-1. **Create the Starter Script**: Copy [`template_mission.py`](template_mission.py) to `missions/mission_06_<slug>.py` and customize Phase 1 (working demo) and Phase 2 (`# TODO` Field Challenge).
-2. **Create the Mission Briefing**: Copy [`TEMPLATE.md`](TEMPLATE.md) to `missions/06_<slug>.md` and fill in the sections (`Story Briefing`, `Primary Objectives`, `Systems Check`, `Field Challenge`, `Progressive Hints`, `Mission Success Metrics`, and `Flight Engineer Debrief`), setting `- **Script**: mission_06_<slug>.py`.
+---
+
+## ➕ How to Add or Reorder a Mission
+
+All mission ordering and file associations live in [`missions.json`](missions.json)—no filenames contain numbers, so you can insert or reorder missions at any time without renaming files:
+
+1. **Create the Files**: Copy [`TEMPLATE.md`](TEMPLATE.md), [`template_mission.py`](template_mission.py), and [`test_template_mission.py`](test_template_mission.py) to descriptive, unnumbered filenames (e.g., `servo_arm.md`, `servo_arm.py`, and `test_servo_arm.py`).
+2. **Register in `missions.json`**: Insert an entry at the desired position in [`missions.json`](missions.json) with `"files": { "story": "servo_arm.md", "starter": "servo_arm.py", "test": "test_servo_arm.py" }`.
 3. **Rebuild the Website Data**:
    ```bash
    python scripts/build_site.py

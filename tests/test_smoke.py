@@ -53,13 +53,13 @@ def test_public_exports() -> None:
 
 @pytest.mark.parametrize(
     "mission_script",
-    sorted((REPO_ROOT / "missions").glob("mission_*.py")),
+    sorted(p for p in (REPO_ROOT / "missions").glob("*.py") if p.name != "template_mission.py"),
     ids=lambda p: p.name,
 )
 def test_missions_execute_in_simulation_mode(
     mission_script: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Verify every Cadet Engineer mission script executes cleanly with MBOT_SIMULATE=1."""
+    """Verify every mission and pre-flight test script executes with MBOT_SIMULATE=1."""
     monkeypatch.setenv("MBOT_SIMULATE", "1")
     monkeypatch.setattr(time, "sleep", lambda _sec: None)
     runpy.run_path(str(mission_script), run_name="__main__")

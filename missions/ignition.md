@@ -1,8 +1,4 @@
-# Mission 01: Ignition & Telemetry Handshake
-
-- **Badge**: Optical & Audio Transponder
-- **Script**: mission_01_ignition.py
-- **Requires Battery**: false
+# Ignition & Telemetry Handshake
 
 ## Story Briefing
 Cadet Engineer, your rover has survived descent and safely touched down in the Ares VII basin. However, the telemetry array is dead, and the primary computer is unresponsive. Before we ignite the drive thrusters, we must establish a biological heartbeat: test the communication transponder and verify that command packets can be sent from Mission Control (your laptop) to the Rover Core.
@@ -20,7 +16,7 @@ Cadet Engineer, your rover has survived descent and safely touched down in the A
 - **Firmware**: `mbot_firmware.ino` flashed via Arduino IDE (and Arduino IDE closed).
 
 ## Field Challenge
-Open `missions/mission_01_ignition.py` in Thonny and press **▶ Run (`F5`)** to verify that the Emerald Green LED and 440 Hz tone work. Then scroll to the **Field Challenge (`# TODO`)** section and program the rover to transmit **S.O.S.** (`... --- ...`):
+Open `missions/ignition.py` in Thonny and press **▶ Run (`F5`)** to verify that the Emerald Green LED and 440 Hz tone work. You can also open `missions/test_ignition.py` and press **▶ Run (`F5`)** to validate your script in simulation before connecting the rover! Then scroll to the **Field Challenge (`# TODO`)** section and program the rover to transmit **S.O.S.** (`... --- ...`):
 - **S**: 3 short pulses (`0.2` seconds ON, `0.2` seconds OFF)
 - **O**: 3 long pulses (`0.6` seconds ON, `0.2` seconds OFF)
 - **S**: 3 short pulses (`0.2` seconds ON, `0.2` seconds OFF)
@@ -32,9 +28,9 @@ Open `missions/mission_01_ignition.py` in Thonny and press **▶ Run (`F5`)** to
 - **Hint 3 — Adding Audio to Each Pulse**: Inside your loop, call `rover.buzzer(880, 200)` for a short beep (`200` ms) or `rover.buzzer(880, 600)` for a long beep (`600` ms) right when you turn the LED on!
 
 ## Mission Success Metrics
+- Pre-flight test `missions/test_ignition.py` passes in Thonny (`▶ Run`) or `pytest`.
 - Terminal prints `[STATUS] Telemetry Link: SECURE 🟢` without serial errors.
-- Both onboard RGB LEDs glow Emerald Green (`0, 255, 0`) for 1.5 seconds during the optical beacon diagnostic.
-- The onboard buzzer sounds a 440 Hz tone during the audio transponder check.
+- Both onboard RGB LEDs glow Emerald Green (`0, 255, 0`) during the optical beacon diagnostic and the buzzer sounds a 440 Hz tone.
 - Field Challenge: Rover transmits 3 short pulses, 3 long pulses, and 3 short pulses (`S.O.S.`) and finishes in dark standby (`0, 0, 0`).
 
 ## Flight Engineer Debrief

@@ -74,11 +74,23 @@ def capture_screenshots(output_dir: Path, site_index: Path = SITE_INDEX) -> list
         manifest.append(
             {
                 "filename": shot_02,
-                "title": "Mission 01: Ignition & Telemetry (Starter Template & Hints)",
+                "title": "Mission 01: Ignition & Telemetry (Starter Code & Pre-Flight Test)",
             }
         )
 
-        # 3. How to Add a Mission Modal
+        # 3. Mission 02: Digital Twin & Pre-Flight Unit Testing
+        page.click("#nav-btn-mission-02")
+        page.wait_for_selector("#test-code-pre")
+        shot_02b = "02b-mission-02-preflight-testing.png"
+        page.screenshot(path=str(output_dir / shot_02b), full_page=True)
+        manifest.append(
+            {
+                "filename": shot_02b,
+                "title": "Mission 02: Digital Twin & Pre-Flight Unit Testing",
+            }
+        )
+
+        # 4. How to Add a Mission Modal
         page.evaluate("window.scrollTo(0, 0)")
         page.click("#open-add-mission-modal-btn")
         page.wait_for_selector("#add-mission-modal:not([hidden])")
